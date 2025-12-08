@@ -21,7 +21,7 @@
             ]
         },
         "subnetID": {
-            "value": "/subscriptions/473d8b91-3b6d-4073-954c-46ccb119c7c3/resourceGroups/TestLabRG/providers/Microsoft.Network/virtualNetworks/MGMT/subnets/IBXMGMT"
+            "value": "/subscriptions/473d8b91-3b6d-4073-954c-46ccb119c7c3/resourceGroups/TestLabRG/providers/Microsoft.Network/virtualNetworks/MGMT/subnets/main"
         },
         "vmSize": {
             "value": "Standard_D2s_v5"
