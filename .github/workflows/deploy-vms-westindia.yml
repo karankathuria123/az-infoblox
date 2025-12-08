@@ -10,11 +10,6 @@ on:
       - '.github/workflows/deploy-vms-southindia.yml'
       - 'bicep/southindia/parameters/vmdef.json'
       - 'bicep/modules/**'
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'bicep/**'
   workflow_dispatch:
 
 permissions:

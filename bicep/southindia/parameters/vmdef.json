@@ -7,21 +7,21 @@
                 {
                     "vmName": "ibx-np-01",
                     "privateIP": "10.239.40.51",
-                    "osDiskId": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk1",
+                    "osDiskId": "/subscriptions/473d8b91-3b6d-4073-954c-46ccb119c7c3/resourceGroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk1",
                     "enableAcceleratedNetworking": false,
                     "sshSourceIP": "*"
                 },
                 {
                     "vmName": "ibx-np-02",
                     "privateIP": "10.239.40.52",
-                    "osDiskId": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk2",
+                    "osDiskId": "/subscriptions/473d8b91-3b6d-4073-954c-46ccb119c7c3/resourceGroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk2",
                     "enableAcceleratedNetworking": false,
                     "sshSourceIP": "*"
                 }
             ]
         },
         "subnetID": {
-            "value": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG/providers/Microsoft.Network/virtualNetworks/MGMT/subnets/IBXMGMT"
+            "value": "/subscriptions/473d8b91-3b6d-4073-954c-46ccb119c7c3/resourceGroups/TestLabRG/providers/Microsoft.Network/virtualNetworks/MGMT/subnets/IBXMGMT"
         },
         "vmSize": {
             "value": "Standard_D2s_v5"
