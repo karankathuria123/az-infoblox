@@ -1,0 +1,127 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmConfigs": {
+            "value": [
+                {
+                    "vmName": "ibx-np-03",
+                    "privateIP": "10.240.40.51",
+                    "osDiskId": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG1/providers/Microsoft.Compute/disks/nios-managed-disk3",
+                    "enableAcceleratedNetworking": false,
+                    "sshSourceIP": "*"
+                },
+                {
+                    "vmName": "ibx-np-04",
+                    "privateIP": "10.240.40.52",
+                    "osDiskId": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG1/providers/Microsoft.Compute/disks/nios-managed-disk4",
+                    "enableAcceleratedNetworking": false,
+                    "sshSourceIP": "*"
+                }
+            ]
+        },
+        "subnetID": {
+            "value": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG1/providers/Microsoft.Network/virtualNetworks/MGMT1/subnets/IBXMGMT1"
+        },
+        "vmSize": {
+            "value": "Standard_D2s_v3"
+        },
+        "osType": {
+            "value": "linux"
+        },
+        "securityRules": {
+            "value": [
+                {
+                    "name": "SSH-Infoblox",
+                    "protocol": "Tcp",
+                    "access": "Allow",
+                    "priority": 100,
+                    "direction": "Inbound",
+                    "sourceAddressPrefix": "*",
+                    "sourceAddressPrefixes": [],
+                    "sourcePortRange": "*",
+                    "sourcePortRanges": [],
+                    "destinationAddressPrefix": [],
+                    "destinationAddressPrefixes": [
+                        "10.239.40.0/24",
+                        "10.240.40.0/24"
+                    ],
+                    "destinationPortRanges": ["22"], 
+                    "destinationPortRange": ""
+                },
+                {
+                    "name": "HTTPS-Infoblox",
+                    "priority": "110",
+                    "protocol": "Tcp",
+                    "access": "Allow",
+                    "direction": "Inbound",
+                    "sourceAddressPrefix": "*",
+                    "sourceAddressPrefixes": [],
+                    "sourcePortRange": "*",
+                    "sourcePortRanges": [],
+                    "destinationAddressPrefix": [],
+                    "destinationAddressPrefixes": [
+                        "10.239.40.0/24",
+                        "10.240.40.0/24"
+                    ],
+                    "destinationPortRanges": [], 
+                    "destinationPortRange": "443"
+                },
+                {
+                    "name": "DBSYNC-Infoblox-Key-Exchange-Inbound",
+                    "priority": "120",
+                    "protocol": "UDP",
+                    "access": "Allow",
+                    "direction": "Inbound",
+                    "sourceAddressPrefix": "",
+                    "sourceAddressPrefixes": [
+                        "10.239.40.50/32",
+                        "10.239.40.62/32"
+                    ],
+                    "sourcePortRange": "",
+                    "sourcePortRanges": [
+                        "1194",
+                        "2194"
+                    ],
+                    "destinationAddressPrefix": "",
+                    "destinationAddressPrefixes": [
+                        "10.239.40.0/24",
+                        "10.240.40.0/24"
+                    ],
+                    "destinationPortRange": "",
+                    "destinationPortRanges": [
+                        "1194",
+                        "2194"
+                    ]
+                },
+                {
+                    "name": "DBSYNC-Infoblox-Key-Exchange-Outbound",
+                    "priority": "100",
+                    "protocol": "UDP",
+                    "access": "Allow",
+                    "direction": "Outbound",
+                    "sourceAddressPrefix": "",
+                    "sourceAddressPrefixes": [
+                        "10.239.40.50/32",
+                        "10.239.40.62/32"
+                    ],
+                    "sourcePortRange": "",
+                    "sourcePortRanges": [
+                        "1194",
+                        "2194"
+                    ],
+                    "destinationAddressPrefix": "",
+                    "destinationAddressPrefixes": [
+                        "10.239.40.0/24",
+                        "10.240.40.0/24"
+                    ],
+                    "destinationPortRange": "",
+                    "destinationPortRanges": [
+                        "1194",
+                        "2194"
+                    ]
+                }
+            ]
+        }
+    }
+}
