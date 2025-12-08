@@ -1,0 +1,99 @@
+---
+name: Deploy vNIOS to Azure - West India
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'bicep/**'
+      - '.github/workflows/deploy-vms-southindia.yml'
+      - 'bicep/southindia/parameters/vmdef.json'
+      - 'bicep/modules/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'bicep/**'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  RESOURCE_GROUP: TestLabRG1
+  LOCATION: westindia
+  BICEP_FILE: ${{ github.workspace }}/bicep/main.bicep
+  PARAM_FILE: ${{ github.workspace }}/bicep/westindia/parameters/vmdef.json
+
+jobs:
+  validate:
+    name: Validate Bicep - West India
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Validate Bicep template
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az deployment group validate \
+              --resource-group ${{env.RESOURCE_GROUP}} \
+              --template-file ${{env.BICEP_FILE}} \
+              --parameters ${{env.PARAM_FILE}}
+
+  deploy:
+    name: Deploy vNIOS to Azure Non-Production - West India
+    runs-on: ubuntu-latest
+    needs: validate
+
+    env:
+      RESOURCE_GROUP: TestLabRG1
+      LOCATION: westindia
+      BICEP_FILE: ${{ github.workspace }}/bicep/main.bicep
+      PARAM_FILE: ${{ github.workspace }}/bicep/westindia/parameters/vmdef.json
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy VM - West India
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az deployment group create \
+              --resource-group "$RESOURCE_GROUP" \
+              --template-file "$BICEP_FILE" \
+              --parameters "$PARAM_FILE"
+
+      - name: List Resources - West India
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            echo "Deployed VMs are:"
+            az vm list \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --show-details \
+              --output table
+            az network nic list \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --output table
+            az network nsg list \
+              --resource-group ${{ env.RESOURCE_GROUP }} \
+              --output table

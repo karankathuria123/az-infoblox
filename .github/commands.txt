@@ -1,0 +1,298 @@
+az disk create --name nios-managed-disk1 --resource-group TestLabRG --size 250 --sku Premium_LRS --source "https://infobloxos.blob.core.windows.net/infoblox/nios.vhd" --source-storage-account-id "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG/providers/Microsoft.Storage/storageAccounts/infobloxos" --os-type Linux
+
+az network nsg create --resource-group TestLabRG --name LAN2-nsg --location southindia
+
+az network nic create --name LAN2 --resource-group TestLabRG --subnet IBXMGMT --vnet-name MGMT --private-ip-address 10.239.40.51 --network-security-group LAN2-nsg
+
+az vm create --name infoblox-np-01 --resource-group TestLabRG --nics LAN2 --attach-os-disk "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourcegroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk" --size Standard_D2s_v5 --location southindia --os-type Linux
+
+
+az network nsg rule create \
+    --resource-group TestLabRG \
+    --nsg-name LAN2-nsg \
+    --name toInfoblox-22 \
+    --priority 100 \
+    --direction Inbound \
+    --access Allow \
+    --protocol Tcp \
+    --source-address-prefixes '*' \
+    --source-port-ranges '*' \
+    --destination-address-prefixes '10.239.40.0/24' \
+    --destination-port-ranges 22 \
+    --description "Allow inbound traffic on Infoblox for SSH access"
+
+
+    az network nsg rule create \
+    --resource-group TestLabRG \
+    --nsg-name LAN2-nsg \
+    --name toInfoblox-443 \
+    --priority 110 \
+    --direction Inbound \
+    --access Allow \
+    --protocol Tcp \
+    --source-address-prefixes '*' \
+    --source-port-ranges '*' \
+    --destination-address-prefixes '10.239.40.0/24' \
+    --destination-port-ranges 443 \
+    --description "Allow inbound traffic on Infoblox for https access"
+
+
+
+
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Azure Login
+              uses: azure/login@v1
+              with:
+                  client-id: ${{ secrets.AZURE_CLIENT_ID }}
+                  tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+                  subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+            - name: Login to Azure (Dry Run)
+              run: |
+                az account show
+
+
+
+
+  BICEP_FILE: ${{ github.workspace }}/.github/bicep/main.bicep
+  PARAMETERS_FILE: ${{ github.workspace }}/.github/bicep/parameters/vmdef.json
+
+
+      - name: Deploy Bicep templates
+        uses: azure/arm-deploy@v2
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.RESOURCE_GROUP }}
+          template: ${{ env.BICEP_FILE }}
+          parameters: ${{ env.PARAMETERS_FILE }}
+          deploymentName: vm-deployment-${{ github.run_number }}
+
+
+From pre-valiation file
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Azure login(Dry Run)
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Validate Azure CLI Commands(Dry Run)
+        run: |
+          echo "Dry run: Validating Azure Credentials"
+          az account show
+
+
+
+          if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+          commit caaa313da2789a10b9f894a0151ae7b76a2a8c7f
+
+
+
+          nsg.bicep - vmConfigs
+
+          @description('Name of - Network Security Group')
+param nsgName string
+
+@description('Location of NSG')
+param location string = resourceGroup().location
+
+@description('Allow SSH port (TCP-22)')
+param allowSSH bool = true
+
+@description('Allow HTTPS (TCP-443)')
+param allowHTTPS bool = true
+
+@description('Allowed Source for SSH/HTTPs')
+param sshSourceIP string = '*'
+
+resource nsg 'Microsoft.Network/networkSecurityGroups@2024-10-01' = {
+  name: nsgName
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'Allow-SSH-Infoblox'
+        properties: {
+          priority: 100
+          protocol: 'Tcp'
+          access: allowSSH ? 'Allow' : 'Deny'
+          direction: 'Inbound'
+          sourceAddressPrefix: sshSourceIP
+          sourcePortRange: '*'
+          destinationAddressPrefixes: [
+            '10.239.40.0/24'
+            '10.240.40.0/24'
+          ]
+          destinationPortRange: '22'
+        }
+      }
+      {
+        name: 'Allow-HTTPs-Infoblox'
+        properties: {
+          priority: 110
+          protocol: 'Tcp'
+          access: allowHTTPS ? 'Allow' : 'Deny'
+          direction: 'Inbound'
+          sourceAddressPrefix: sshSourceIP
+          sourcePortRange: '*'
+          destinationAddressPrefixes: [
+            '10.239.40.0/24'
+            '10.240.40.0/24'
+          ]
+          destinationPortRange: '443'
+        }
+      }
+    ]
+  }
+}
+
+output nsgId string = nsg.id
+output nsgName string = nsg.name
+
+
+
+
+============================================Error==========================================
+
+
+
+{
+  "code": "DeploymentFailed",
+  "target": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG/providers/Microsoft.Resources/deployments/main",
+  "message": "At least one resource deployment operation failed. Please list deployment operations for details. Please see https://aka.ms/arm-deployment-operations for usage details.",
+  "details": [
+    {
+      "code": "ResourceDeploymentFailure",
+      "target": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG/providers/Microsoft.Resources/deployments/nsg-deployment-ibx-np-01",
+      "message": "The resource write operation failed to complete successfully, because it reached terminal provisioning state 'Failed'."
+    },
+    {
+      "code": "ResourceDeploymentFailure",
+      "target": "/subscriptions/e7023b94-91e4-43dd-b357-583a1cd08495/resourceGroups/TestLabRG/providers/Microsoft.Resources/deployments/nsg-deployment-ibx-np-02",
+      "message": "The resource write operation failed to complete successfully, because it reached terminal provisioning state 'Failed'."
+    }
+  ]
+}
+
+
+destinationAddressPrefixes
+
+
+
+
+---------------backup NSG dules from southindia vmdef.json
+
+{
+                    "name": "HTTPS-Infoblox",
+                    "priority": "110",
+                    "protocol": "Tcp",
+                    "access": "Allow",
+                    "direction": "Inbound",
+                    "sourceAddressPrefix": "*",
+                    "sourcePortRange": "*",
+                    "destinationAddressPrefixes": [
+                        "10.239.40.0/24",
+                        "10.240.40.0/24"
+                    ],
+                    "destinationPortRange": "443"
+                }
+
+
+{
+                    "name": "ICMP-Infoblox",
+                    "priority": "120",
+                    "protocol": "ICMP",
+                    "access": "Allow",
+                    "direction": "Inbound",
+                    "sourceAddressPrefix": "*",
+                    "sourcePortRange": "*",
+                    "destinationAddressPrefixes": [
+                        "10.239.40.0/24",
+                        "10.240.40.0/24"
+                    ],
+                    "destinationPortRange": "*"
+                },
+                {
+                    "name": "DBSYNC-Infoblox",
+                    "priority": "130",
+                    "protocol": "UDP",
+                    "access": "Allow",
+                    "direction": "Inbound",
+                    "sourceAddressPrefixes": [
+                        "10.239.40.50/32",
+                        "10.239.40.62/32"
+                    ],
+                    "sourcePortRanges": [
+                        "1194",
+                        "2194"
+                    ],
+                    "destinationAddressPrefixes": [
+                        "10.239.40.0/24",
+                        "10.240.40.0/24"
+                    ],
+                    "destinationPortRanges": [
+                        "1194",
+                        "2194"
+                    ]
+                }
+
+
+Bicep valiation----------
+
+validate:
+    name: Validate Bicep Templates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Validate Bicep - South India
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az deployment group validate \
+              --resource-group ${{env.RESOURCE_GROUP}} \
+              --template-file ${{env.BICEP_FILE}} \
+              --parameters ${{env.PARAM_FILE}}
+
+
+pre-validation--------
+
+
+---
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Validating yaml files
+        run: yamllint .
