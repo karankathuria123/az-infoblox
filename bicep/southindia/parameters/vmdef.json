@@ -7,21 +7,21 @@
                 {
                     "vmName": "ibx-np-01",
                     "privateIP": "10.239.40.51",
-                    "osDiskId": "/subscriptions/473d8b91-3b6d-4073-954c-46ccb119c7c3/resourceGroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk1",
+                    "osDiskId": "/subscriptions/7f48d4ee-a0d7-4e5f-a915-c5e6c4aeac3d/resourceGroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk1",
                     "enableAcceleratedNetworking": false,
                     "sshSourceIP": "*"
                 },
                 {
                     "vmName": "ibx-np-02",
                     "privateIP": "10.239.40.52",
-                    "osDiskId": "/subscriptions/473d8b91-3b6d-4073-954c-46ccb119c7c3/resourceGroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk2",
+                    "osDiskId": "/subscriptions/7f48d4ee-a0d7-4e5f-a915-c5e6c4aeac3d/resourceGroups/TestLabRG/providers/Microsoft.Compute/disks/nios-managed-disk2",
                     "enableAcceleratedNetworking": false,
                     "sshSourceIP": "*"
                 }
             ]
         },
         "subnetID": {
-            "value": "/subscriptions/473d8b91-3b6d-4073-954c-46ccb119c7c3/resourceGroups/TestLabRG/providers/Microsoft.Network/virtualNetworks/MGMT/subnets/main"
+            "value": "/subscriptions/7f48d4ee-a0d7-4e5f-a915-c5e6c4aeac3d/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/virtualNetworks/MGMT/subnets/main"
         },
         "vmSize": {
             "value": "Standard_D2s_v5"
@@ -43,8 +43,7 @@
                     "sourcePortRanges": [],
                     "destinationAddressPrefix": [],
                     "destinationAddressPrefixes": [
-                        "10.239.40.0/24",
-                        "10.240.40.0/24"
+                        "10.239.40.0/24"
                     ],
                     "destinationPortRanges": ["22"], 
                     "destinationPortRange": ""
@@ -61,8 +60,7 @@
                     "sourcePortRanges": [],
                     "destinationAddressPrefix": [],
                     "destinationAddressPrefixes": [
-                        "10.239.40.0/24",
-                        "10.240.40.0/24"
+                        "10.239.40.0/24"
                     ],
                     "destinationPortRanges": [], 
                     "destinationPortRange": "443"
@@ -75,8 +73,7 @@
                     "direction": "Inbound",
                     "sourceAddressPrefix": "",
                     "sourceAddressPrefixes": [
-                        "10.239.40.50/32",
-                        "10.239.40.62/32"
+                        "10.239.40.50/32"
                     ],
                     "sourcePortRange": "",
                     "sourcePortRanges": [
@@ -85,8 +82,7 @@
                     ],
                     "destinationAddressPrefix": "",
                     "destinationAddressPrefixes": [
-                        "10.239.40.0/24",
-                        "10.240.40.0/24"
+                        "10.239.40.0/24"
                     ],
                     "destinationPortRange": "",
                     "destinationPortRanges": [
@@ -102,8 +98,7 @@
                     "direction": "Outbound",
                     "sourceAddressPrefix": "",
                     "sourceAddressPrefixes": [
-                        "10.239.40.50/32",
-                        "10.239.40.62/32"
+                        "10.239.40.50/24"
                     ],
                     "sourcePortRange": "",
                     "sourcePortRanges": [
@@ -112,8 +107,7 @@
                     ],
                     "destinationAddressPrefix": "",
                     "destinationAddressPrefixes": [
-                        "10.239.40.0/24",
-                        "10.240.40.0/24"
+                        "10.239.40.0/24"
                     ],
                     "destinationPortRange": "",
                     "destinationPortRanges": [
