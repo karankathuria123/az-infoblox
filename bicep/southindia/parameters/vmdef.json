@@ -98,7 +98,7 @@
                     "direction": "Outbound",
                     "sourceAddressPrefix": "",
                     "sourceAddressPrefixes": [
-                        "10.239.40.50/24"
+                        "10.239.40.0/24"
                     ],
                     "sourcePortRange": "",
                     "sourcePortRanges": [
